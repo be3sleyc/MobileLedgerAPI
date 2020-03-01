@@ -3,8 +3,7 @@ CREATE TABLE Users (
     givenname VARCHAR(30) NOT NULL, 
     surname VARCHAR(30) NOT NULL, 
     email VARCHAR(50) NOT NULL, 
-    password BINARY(128) NOT NULL, 
-    spice BINARY(128) NOT NULL,  
+    password BINARY(80) NOT NULL, 
     lastaccess DATETIME
     );
 ALTER TABLE Users AUTO_INCREMENT = 2220;
@@ -17,3 +16,4 @@ CREATE TABLE Transactions (
     amount DECIMAL(13,2) NOT NULL,
     category VARCHAR(255) NOT NULL DEFAULT 'Misc'
 );
+ALTER TABLE Transactions AUTO_INCREMENT = 31;
