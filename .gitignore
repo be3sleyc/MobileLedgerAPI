@@ -1,5 +1,4 @@
-api/.env
 .vscode/*
-node_modules/*
+api/.env
 api/node_modules/*
 api/package*
