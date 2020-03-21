@@ -30,7 +30,7 @@ IF(pGivenName IS NOT NULL) THEN
                 IF(pUser IS NULL) THEN
                     INSERT INTO Users (givenname, surname, email, password) VALUES (pGivenName, pSurName, pEmail, pPassword);
                     CALL sp_addaccount(pEmail, 'Cash', '', '');
-                    SELECT givenname, surname, email FROM Users WHERE email = pEmail;
+                    SELECT id, givenname, surname, email FROM Users WHERE email = pEmail;
                 END IF;
             END IF;
         END IF;
@@ -56,9 +56,24 @@ BEGIN
     DECLARE pUser INT DEFAULT NULL;
     SELECT id INTO pUser FROM Users WHERE email = pEmail AND password = pPassword;
     IF(pUser IS NOT NULL) THEN
-        SELECT email, givenname, surname, lastaccess FROM Users WHERE id = pUser;
         UPDATE Users SET lastaccess = NOW() WHERE id = pUser;
-        CALL sp_listaccounts(pEmail);
+        SELECT id, email, givenname, surname, lastaccess FROM Users WHERE id = pUser;
     END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_getUserID (
+    IN pid INT UNSIGNED)
+BEGIN
+    SELECT id, givenname, surname, email FROM Users WHERE id = pid;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_getUserEmail (
+    IN pEmail VARCHAR(50))
+BEGIN
+    SELECT id, givenname, surname, email, password FROM Users WHERE email = pemail;
 END$$
 DELIMITER ;

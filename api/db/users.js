@@ -13,9 +13,9 @@ userdb.all = () => {
         });
 };
 
-userdb.one = (id) => {
+userdb.one_e = (email) => {
     return pool
-        .query("SELECT * FROM `Users` WHERE id = ?", [id])
+        .query("CALL sp_getuseremail (?)", [email])
         .then(row => {
             return row[0];
         })
@@ -24,12 +24,35 @@ userdb.one = (id) => {
         });
 };
 
-userdb.new = (attr) => {
-    let [first_name, last_name, email, pwd] = attr;
+userdb.one_i = (id) => {
     return pool
-        .query("INSERT INTO `Users` (givenname, surname, email, password) values (?, ?, ?, ?)", [first_name, last_name, email, pwd])
+        .query("CALL sp_getuserid (?)", [id])
+        .then(row => {
+            return row[0];
+        })
+        .catch(err => {
+            return { error: err };
+        });
+};
+
+// let attr = [first_name, last_name, email, pwd];
+userdb.new = (attr) => {
+    return pool
+        .query("CALL sp_adduser (?, ?, ?, ?)", attr)
         .then(res => {
-            console.log(res);
+            return res;
+        })
+        .catch(err => {
+            return { error: err };
+        })
+}
+
+// let attr = [email, pwd];
+userdb.login = (attr) => {
+    return pool
+        .query("CALL sp_login (?, ?)", attr)
+        .then(res => {
+            return res;
         })
         .catch(err => {
             return { error: err };
