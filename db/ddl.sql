@@ -5,6 +5,7 @@ CREATE TABLE Users (
     email VARCHAR(80) NOT NULL, 
     password BINARY(80) NOT NULL, 
     lastaccess DATETIME
+    CONSTRAINT UNIQUE (email)
     );
 ALTER TABLE Users AUTO_INCREMENT = 2220;
 
@@ -13,10 +14,18 @@ CREATE TABLE Accounts (
     userid INT UNSIGNED NOT NULL, 
     name VARCHAR(30) NOT NULL,
     balance DECIMAL(13,2) NOT NULL DEFAULT 0,
-    notes VARCHAR(200),
+    notes VARCHAR(512),
     FOREIGN KEY(userid) REFERENCES Users(id)
+    CONSTRAINT UNIQUE (id, userid, name)
 );
 ALTER TABLE Accounts AUTO_INCREMENT = 102;
+
+CREATE TABLE Bokens (
+    token VARBINARY(300) PRIMARY KEY,
+    userid INT UNSIGNED NOT NULL,
+    expdate DATETIME NOT NULL,
+    FOREIGN KEY(userid) REFERENCES Users(id)
+);
 
 CREATE TABLE Transactions (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

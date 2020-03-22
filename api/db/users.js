@@ -9,7 +9,7 @@ userdb.all = () => {
             return rows;
         })
         .catch(err => {
-            return { error: err };
+            return { db_error: err };
         });
 };
 
@@ -20,7 +20,7 @@ userdb.one_e = (email) => {
             return row[0];
         })
         .catch(err => {
-            return { error: err };
+            return { db_error: err };
         });
 };
 
@@ -31,7 +31,7 @@ userdb.one_i = (id) => {
             return row[0];
         })
         .catch(err => {
-            return { error: err };
+            return { db_error: err };
         });
 };
 
@@ -43,8 +43,8 @@ userdb.new = (attr) => {
             return res;
         })
         .catch(err => {
-            return { error: err };
-        })
+            return { db_error: err };
+        });
 }
 
 // let attr = [email, pwd];
@@ -55,8 +55,20 @@ userdb.login = (attr) => {
             return res;
         })
         .catch(err => {
-            return { error: err };
+            return { db_error: err };
+        });
+}
+
+// let attr = [token, userid, exp];
+userdb.logout = (attr) => {
+    return pool
+        .query("CALL sp_logout (?, ?, ?)", attr)
+        .then(res => {
+            return res;
         })
+        .catch( err => {
+            return {db_error : err };
+        });
 }
 
 module.exports = userdb;

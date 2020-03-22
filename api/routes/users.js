@@ -1,140 +1,122 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 const router = express.Router();
+
 const userdb = require('../db/users');
-const accountdb = require('../db/accounts');
-const transactiondb = require('../db/transactions');
+const validate = require('../validation');
+const auth = require('./verifyToken');
 
 const saltrounds = 10;
-
-// should be disabled
-router.get('/', (req, res, next) => {
-    try {
-        let results = userdb.all();
-        results.then(rows => { res.json(rows) });
-    } catch (e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
-});
-
-// should be disabled
-router.get('/:email', async (req, res, next) => {
-    try {
-        let result = userdb.one_e(req.params.email);
-        result.then(row => { res.json(row) });
-    } catch (e) {
-        console.log("route error:", e);
-        res.sendStatus(500);
-    }
-});
 
 // open to anyone except logged in users.
 router.post('/register', (req, res) => {
     try {
         // client shouldn't be logged in
-        if (true) {
-            let missing_err = '{ "missing_value_errors":[ {';
-
-            if (req.body.firstname == null) {
-                missing_err += '"firstname_error" : "Missing value for firstname!"';
-            }
-            if (req.body.lastname == null) {
-                missing_err += (missing_err.length > 28 ? ", " : "");
-                missing_err += '"lastname_error" : "Missing value for lastname!"';
-            }
-            if (req.body.email == null) {
-                missing_err += (missing_err.length > 28 ? ", " : "");
-                missing_err += '"email_error" : "Missing value for email!"';
-            }
-            if (req.body.password == null) {
-                missing_err += (missing_err.length > 28 ? ", " : "");
-                missing_err += '"password_error" : "Missing value for password!"';
+        const token = req.header('auth-token');
+        if (!token) {
+            const { error } = validate.register(req.body);
+            if (error) {
+                return res.status(400).json({ validation_error: error.details[0].message });
             }
 
-            if (missing_err.length > 28) {
-                missing_err += "} ] }"
-                res.json(JSON.parse(missing_err));
-            } else {
-                // check if email has already been used
-                let email = req.body.email;
-                let find = userdb.one_e(email);
-                find.then(row => {
-                    if (!(row.length > 0)) {
-                        bcrypt.hash(req.body.password, saltrounds, (err, hash) => {
-                            if (err) {
-                                res.json({ error: err });
-                            } else {
-                                let params = [req.body.firstname, req.body.lastname, email, hash];
-                                let result = userdb.new(params);
-                                result.then(success => {
-                                    res.json(success[0])
-                                });
-                            }
-                        });
-                    } else {
-                        res.json({ error: 'email already in use' });
-                    }
-                });
-            }
+            // check if email has already been used
+            let email = req.body.email.toLowerCase();
+            let find = userdb.one_e(email);
+            find.then(row => {
+                if (row.length < 1) {
+                    bcrypt.hash(req.body.password, saltrounds, (err, hash) => {
+                        if (err) {
+                            res.status(400).json({ error: err });
+                        } else {
+                            let params = [req.body.firstname, req.body.lastname, email, hash];
+                            let result = userdb.new(params);
+                            result.then(success => {
+                                res.json(success[0])
+                            });
+                        }
+                    });
+                } else {
+                    res.status(403).json({ error: 'email already in use' });
+                }
+            });
         } else {
-            res.status(403).json({ error: "You can't access this page logged in" })
+            res.status(403).json({ error: "You can't access this page with a token" })
         }
     } catch (e) {
-        res.status(500).send("route error:", e);
+        res.status(500).json({ route_error: e });
     }
 });
 
-router.post('/login', (req, res) => {
+router.put('/login', (req, res) => {
     // get email and username form request
     try {
         // client shouldn't be logged in
-        if (true) {
-            let missing_err = '{ "missing_value_errors":[ {';
+        const token = req.header('auth-token');
+        if (!token) {
+            const { error } = validate.login(req.body);
 
-            if (req.body.email == null) {
-                missing_err += (missing_err.length > 28 ? ", " : "");
-                missing_err += '"email_error" : "Missing value for email!"';
+            if (error) {
+                return res.status(400).json({ Validation_Error: error.details[0].message })
             }
-            if (req.body.password == null) {
-                missing_err += (missing_err.length > 28 ? ", " : "");
-                missing_err += '"password_error" : "Missing value for password!"';
-            }
-            if (missing_err.length > 28) {
-                missing_err += "} ] }"
-                res.json(JSON.parse(missing_err));
-            } else {
-                // check db for user with email and get hash
-                let email = req.body.email;
-                let find = userdb.one_e(email);
-                find.then(user => {
-                    if (user.length === 1) {
-                        let pwd = user[0].password.toString();
+            // check db for user with email and get hash
+            let email = req.body.email.toLowerCase();
+            let find = userdb.one_e(email);
+            find.then(user => {
+                if (user.length === 1) {
+                    let pwd = user[0].password.toString();
 
-                        // compare password and hash
-                        bcrypt.compare(req.body.password, pwd, (err, result) => {
-                            if (err) {
-                                res.json({ login_error: 'bad password' });
-                            } else if (result) {
-                                // if match, login with hash
-                                let result = userdb.login([email, pwd]);
-                                result.then(user => { 
-                                    res.json(user[0]) 
+                    // compare password and hash
+                    bcrypt.compare(req.body.password, pwd, (err, result) => {
+                        if (err) {
+                            res.status(403).json({ login_error: "bad password" });
+                        } else if (result) {
+                            // if match, login with hash
+                            let result = userdb.login([email, pwd]);
+                            result.then(user => {
+                                // should return a JWT
+                                const token = jwt.sign(user[0][0], process.env.JWT_SECRET, { expiresIn: "7d" }, (err, token) => {
+                                    if (err) {
+                                        return res.json({ token_error: err });
+                                    }
+                                    res.header('auth-token', token).json({ token: token });
                                 });
-                            } else {
-                                res.json({ login_error: 'bad email or password' });
-                            }
-                        });
-                    } else {
-                        res.json({ login_error: 'bad email or password' });
-                    }
-                });
-            }
+
+                            });
+                        } else {
+                            res.status(403).json({ login_error: "bad email or password" });
+                        }
+                    });
+                } else {
+                    res.status(403).json({ login_error: "bad email or password" });
+                }
+            });
         } else {
-            res.status(403).json({ error: "You can't access this page logged in" })
+            res.status(403).json({ error: "You can't access this page with a token" })
         }
     } catch (e) {
-        res.status(500).json({ 'route error': e });
+        res.status(500).json({ route_error: e });
+    }
+});
+
+router.put('/logout', auth, (req, res) => {
+    try {
+        const token = req.header('auth-token');
+        let expdate = new Date(0);
+        expdate.setUTCSeconds(req.user.exp);
+        let result = userdb.logout([token, req.user.id, expdate]);
+        result.then(row => {
+            if (row.affectedRows == 1) {
+                res.status(200).json({ logout: 'success' });
+                console.log("logged out");
+            } else {
+                res.json({ logout: 'failed' });
+                console.log("logged out failed");
+            }
+        })
+    } catch (e) {
+        res.status(500).json({ route_error: e });
     }
 });
 
