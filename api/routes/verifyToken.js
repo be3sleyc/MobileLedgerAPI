@@ -13,19 +13,21 @@ module.exports = (req, res, next) => {
     try {
         let blacklist = tokendb.lookup(token);
         blacklist.then( row => {
-            console.log("blacklist:", row[0]);
+            if(row.length > 0) {
+                return res.status(401).json({ auth_error: 'Access Denied' });
+            } else {
+                jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+                    if (err) {
+                        console.log(err)
+                        return res.status(401).json({ error: 'Invalid Token' });
+                    } else {
+                        req.user = payload;
+                        next();
+                    }
+                });
+            }
         });
     } catch(e) {
-        res.status(500).json({ route_error: e });
+        return res.status(500).json({ route_error: e });
     }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
-        if (err) {
-            console.log(err)
-            return res.status(401).json({ error: 'Invalid Token' });
-        } 
-
-        req.user = payload;
-        next();
-    });
 }

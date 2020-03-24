@@ -22,7 +22,7 @@ validation.login = (data) => {
     return login_schema.validate(data);
 }
 
-validation.oneaccount = (data) => {
+validation.ids = (data) => {
     const id_schema = Joi.object({
         id: Joi.number().positive().max(4294967295).required()
     });
@@ -48,6 +48,72 @@ validation.editaccount = (data) => {
     });
 
     return accedit_schema.validate(data);
+}
+
+validation.dates = (data) => {
+    const range_schema = Joi.object({
+        start: Joi.date().required(),
+        stop: Joi.date().required().min(Joi.ref('start')),
+        category: Joi.string().max(255),
+        payee: Joi.string().max(100),
+        account: Joi.string().pattern(new RegExp('[0-9]{1,10}'))
+    });
+
+    return range_schema.validate(data);
+}
+
+validation.category = (data) => {
+    const category_schema = Joi.object({
+        category: Joi.string().max(255).required(),
+        start: Joi.date(),
+        stop: Joi.date()
+    });
+
+    return category_schema.validate(data);
+}
+
+validation.account = (data) => {
+    const account_schema = Joi.object({
+        account: Joi.string().pattern(new RegExp('[0-9]{1,10}')).required(),
+        start: Joi.date(),
+        stop: Joi.date()
+    });
+
+    return account_schema.validate(data);
+}
+
+validation.payee = (data) => {
+    const payee_schema = Joi.object({
+        payee: Joi.string().max(100).required(),
+        start: Joi.date(),
+        stop: Joi.date()
+    });
+
+    return payee_schema.validate(data);
+}
+
+validation.transactionedit = (data) => {
+    const edit_schema = Joi.object({
+        accountid: Joi.number().positive().max(4294967295),
+        amount: Joi.string().pattern(new RegExp('-?[0-9]*(\.[0-9]{2})?')).allow(""),
+        paiddate: Joi.date(),
+        payee: Joi.string().max(100),
+        category: Joi.string().max(255)
+    });
+
+    return edit_schema.validate(data);
+}
+
+validation.newtransaction = (data) => {
+    const new_schema = Joi.object({
+        accountid: Joi.number().positive().max(4294967295).required(),
+        amount: Joi.string().pattern(new RegExp('-?[0-9]*(\.[0-9]{2})?')).required(),
+        paiddate: Joi.date().required(),
+        payee: Joi.string().max(100).required(),
+        category: Joi.string().max(255).allow("")
+    })
+
+    return new_schema.validate(data);
 }
 
 module.exports = validation;

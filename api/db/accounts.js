@@ -49,24 +49,4 @@ accountdb.edit = (attr) => {
         });
 }
 
-// let attr = [id, uid, sum];
-accountdb.debit = (attr) => {
-    result = pool
-        .query()
-        .then()
-        .catch(err => {
-            return { db_error: err };
-        });
-}
-
-// let attr = [id, uid, sum];
-accountdb.credit = (attr) => {
-    result = pool
-        .query()
-        .then()
-        .catch(err => {
-            return { db_error: err };
-        });
-}
-
 module.exports = accountdb;

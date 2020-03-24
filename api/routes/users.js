@@ -33,7 +33,9 @@ router.post('/register', (req, res) => {
                             let params = [req.body.firstname, req.body.lastname, email, hash];
                             let result = userdb.new(params);
                             result.then(success => {
-                                res.json(success[0])
+                                if(success.affectedRows == 1) {
+                                    res.sendStatus(200);
+                                }
                             });
                         }
                     });
@@ -108,11 +110,9 @@ router.put('/logout', auth, (req, res) => {
         let result = userdb.logout([token, req.user.id, expdate]);
         result.then(row => {
             if (row.affectedRows == 1) {
-                res.status(200).json({ logout: 'success' });
-                console.log("logged out");
+                res.sendStatus(200)
             } else {
                 res.json({ logout: 'failed' });
-                console.log("logged out failed");
             }
         })
     } catch (e) {
