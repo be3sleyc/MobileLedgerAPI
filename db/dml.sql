@@ -87,5 +87,5 @@ CREATE PROCEDURE sp_edittransaction (IN puid INT UNSIGNED, IN pid INT UNSIGNED, 
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getcategories (IN puid INT UNSIGNED) BEGIN SELECT DISTINCT category FROM Transactions WHERE userid = puid ORDER BY category DESC; END $$
+CREATE PROCEDURE sp_getcategories (IN puid INT UNSIGNED) BEGIN SELECT DISTINCT category FROM Transactions WHERE payerid = puid ORDER BY category DESC; END $$
 DELIMITER ;

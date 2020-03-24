@@ -5,6 +5,16 @@ const transactiondb = require('../db/transactions');
 const auth = require('./verifyToken');
 const validate = require('../validation');
 
+router.get('/categorylist', auth, (req, res) => {
+    try {
+        let result = transactiondb.categories(req.user.id);
+        result.then(rows => {
+            res.json(rows[0]);
+        })
+    } catch (e) {
+        res.status(500).json({ route_error: e });
+    }
+});
 
 router.get('/', auth, (req, res) => {
     try {
@@ -187,13 +197,13 @@ router.put('/:id/edit', auth, (req, res) => {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
 
-        let account = (req.body.account === undefined ? null : req.body.account);
+        let accountid = (req.body.accountid === undefined ? null : req.body.accountid);
         let amount = (req.body.amount === undefined ? null : req.body.amount);
-        let date = (req.body.date === undefined ? null : req.body.date);
+        let paiddate = (req.body.paiddate === undefined ? null : req.body.paiddate);
         let payee = (req.body.payee === undefined ? null : req.body.payee);
         let category = (req.body.category === undefined ? null : req.body.category);
 
-        let result = transactiondb.edit([req.user.id, id, account, amount, date, payee, category]);
+        let result = transactiondb.edit([req.user.id, id, accountid, amount, paiddate, payee, category]);
         result.then(success => {
             if(success.affectedRows == 1) {
                 res.sendStatus(200);
@@ -206,9 +216,9 @@ router.put('/:id/edit', auth, (req, res) => {
 
 router.post('/log', auth, (req, res) => {
     try {
-        console.log(1);
+        
         const { error } = validate.newtransaction(req.body);
-        console.log(2);
+        
         if (error) {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
