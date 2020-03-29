@@ -1,0 +1,39 @@
+{
+  "name": "fintac_api",
+  "version": "1.0.0",
+  "description": "api for tracking personal finances with companion mobile app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "prod": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/be3sleyc/Capstone.git"
+  },
+  "keywords": [
+    "ledger",
+    "personal",
+    "finances",
+    "capstone"
+  ],
+  "author": "Christian Beesley (crmbeesley@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/be3sleyc/Capstone/issues"
+  },
+  "homepage": "https://github.com/be3sleyc/Capstone#readme",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "bcrypt": "^4.0.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mariadb": "^2.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}

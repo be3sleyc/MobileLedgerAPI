@@ -25,10 +25,10 @@ accountdb.one = (ids) => {
         });
 };
 
-// let attr = [uid, name, balance, note];
+// let attr = [uid, name, type, balance, note];
 accountdb.add = (attr) => {
     return pool
-        .query("CALL sp_addaccount (?, ?, ?, ?)", attr)
+        .query("CALL sp_addaccount (?, ?, ?, ?, ?)", attr)
         .then(res => {
             return res;
         })
@@ -37,10 +37,10 @@ accountdb.add = (attr) => {
         })
 }
 
-// let attr = [id, uid, name, note];
+// let attr = [id, uid, name, type, note];
 accountdb.edit = (attr) => {
     return pool
-        .query("CALL sp_editaccount (?, ?, ?, ?)", attr)
+        .query("CALL sp_editaccount (?, ?, ?, ?, ?)", attr)
         .then(res => {
             return res;
         })

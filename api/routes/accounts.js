@@ -42,12 +42,12 @@ router.put('/:id/edit', auth, (req, res) => {
         if (req.body.name) { name = req.body.name; }
         if (req.body.notes !== undefined) { notes = req.body.notes; }
 
-        const { error } = validate.editaccount(req.params, name, notes);
+        const { error } = validate.editaccount({ id: req.params.id, name: name, type: req.body.type, notes: notes });
         if (error) {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
 
-        let result = accountdb.edit([req.params.id, req.user.id, name, notes]);
+        let result = accountdb.edit([req.params.id, req.user.id, name, req.body.type, notes]);
         result.then(row => {
             if (row.affectedRows == 1) {
                 res.sendStatus(200);
@@ -68,16 +68,12 @@ router.post('/add', auth, (req, res) => {
         if (req.body.balance !== undefined) { balance = req.body.balance.replace('$', ''); }
         if (req.body.notes !== undefined) { notes = req.body.notes; }
 
-        console.log([req.user.id, req.body.name, balance, notes]);
-
-        const { error } = validate.newaccount({ name: req.body.name, balance: balance, notes: notes });
+        const { error } = validate.newaccount({ name: req.body.name, type: req.body.type, balance: balance, notes: notes });
         if (error) {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
 
-        console.log([req.user.id, req.body.name, balance, notes]);
-
-        let result = accountdb.add([req.user.id, req.body.name, balance, notes]);
+        let result = accountdb.add([req.user.id, req.body.name, req.body.type, balance, notes]);
         result.then(row => {
             if (row.affectedRows == 1) {
                 res.sendStatus(200);

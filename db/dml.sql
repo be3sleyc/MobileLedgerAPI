@@ -1,17 +1,17 @@
 DELIMITER $$
-CREATE PROCEDURE sp_addaccount (IN pUid INT UNSIGNED, IN pName VARCHAR(30), IN pBalance DECIMAL(13,2), IN pNote VARCHAR(512)) BEGIN IF(pName NOT IN (SELECT name FROM Accounts WHERE userid = puid);) THEN IF(pBalance IS NULL OR pBalance = '') THEN SET pBalance = 0.00; END IF; INSERT INTO Accounts (userid, name, balance, notes) VALUES (pUid, pName, pBalance, pNote); END IF; END$$
+CREATE PROCEDURE sp_addaccount (IN pUid INT UNSIGNED, IN pName VARCHAR(30), IN ptype VARCHAR(20), IN pBalance DECIMAL(13,2), IN pNote VARCHAR(512)) BEGIN IF(pName NOT IN (SELECT name FROM Accounts WHERE userid = puid)) THEN IF(pBalance IS NULL OR pBalance = '') THEN SET pBalance = 0.00; END IF; INSERT INTO Accounts (userid, name, type, balance, notes) VALUES (pUid, pName, ptype, pBalance, pNote); END IF; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, balance, notes FROM Accounts WHERE userid = pid; END$$
+CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pid; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccount (IN pUid INT UNSIGNED,  IN pId INT UNSIGNED) BEGIN SELECT id, name, balance, notes FROM Accounts WHERE userid = pUid AND id = pId; END$$
+CREATE PROCEDURE sp_getaccount (IN pUid INT UNSIGNED,  IN pId INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pUid AND id = pId; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_editaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN pname VARCHAR(30), IN pnotes VARCHAR(512)) BEGIN IF(pname != '') THEN IF(pnotes IS NOT NULL) THEN UPDATE Accounts SET name = pname, notes = pnotes WHERE id = pid AND userid = puid; ELSE UPDATE Accounts SET name = pname WHERE id = pid AND userid = puid; END IF; ELSEIF(pnotes IS NOT NULL) THEN UPDATE Accounts SET  notes = pnotes WHERE id = pid AND userid = puid; END IF; END$$
+CREATE PROCEDURE sp_editaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN pname VARCHAR(30), IN ptype VARCHAR(20), IN pnotes VARCHAR(512)) BEGIN IF(pname = '' OR pname IS NULL) THEN SELECT name INTO pname FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(ptype = '' OR ptype IS NULL) THEN SELECT type INTO ptype FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(pnotes = '' OR pnotes IS NULL) THEN SELECT notes INTO pnotes FROM Accounts WHERE id = pid AND userid = puid; END IF; UPDATE Accounts SET name = pname, type = ptype, notes = pnotes WHERE id = pid AND userid = puid; END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -79,11 +79,11 @@ CREATE PROCEDURE sp_getaccounttransactionrange (IN puid INT UNSIGNED, IN paid IN
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pammount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, amount, category) VALUES (paid, puid, pdate,  ppayee, pammount, pcat); END$$
+CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, amount, category) VALUES (paid, puid, pdate,  ppayee, pamount, pcat); UPDATE Accounts SET balance = balance + pamount WHERE id = paid and payerid = puid; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_edittransaction (IN puid INT UNSIGNED, IN pid INT UNSIGNED, IN paid INT UNSIGNED, IN pammount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pammount IS NULL OR pammount = '' OR pammount = 0)THEN SELECT amount INTO pammount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, amount = pammount, category = pcat WHERE id = pid AND payerid = puid; END$$ 
+CREATE PROCEDURE sp_edittransaction (IN puid INT UNSIGNED, IN pid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN DECLARE old_amount DECIMAL(13,2) DEFAULT NULL; IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pamount IS NULL OR pammount = '' OR pamount = 0)THEN SELECT amount INTO pamount FROM Transactions WHERE id = pid AND payerid = puid; ELSE SELECT amount INTO old_amount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, amount = pamount, category = pcat WHERE id = pid AND payerid = puid; IF(old_amount IS NOT NULL)THEN UPDATE Accounts SET balance = balance - old_amount + pamount WHERE id = paid AND payerid = puid; END IF; END$$ 
 DELIMITER ;
 
 DELIMITER $$

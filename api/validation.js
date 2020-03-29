@@ -33,6 +33,7 @@ validation.ids = (data) => {
 validation.newaccount = (data) => {
     const account_schema = Joi.object({
         name: Joi.string().max(30).required(),
+        type: Joi.string().max(20).allow(""),
         balance: Joi.string().pattern(new RegExp('-?[0-9]*(\.[0-9]{2})?')).allow(""),
         notes: Joi.string().max(512).allow("")
     });
@@ -44,6 +45,7 @@ validation.editaccount = (data) => {
     const accedit_schema = Joi.object({
         id: Joi.number().positive().max(4294967295).required(),
         name: Joi.string().max(30),
+        type: Joi.string().max(20).allow(""),
         notes: Joi.string().max(512).allow("")
     });
 
