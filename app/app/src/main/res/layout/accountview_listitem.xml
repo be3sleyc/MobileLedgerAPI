@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/parentLayout">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/accountTypeIcon"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/accountNameStr"
+        android:text="Account Name"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:textColor="#000"
+        android:layout_toEndOf="@id/accountTypeIcon"
+        android:layout_alignBottom="@id/accountTypeIcon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/accountBalanceStr"
+        android:text="$0.00"
+        android:textColor="#000"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_centerVertical="true"/>
+
+
+
+</RelativeLayout>

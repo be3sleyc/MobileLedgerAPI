@@ -20,7 +20,7 @@ router.get('/', auth, (req, res) => {
 router.get('/:id', auth, (req, res) => {
     try {
         let id = parseInt(req.params.id);
-        console.log(id);
+        
         const { error } = validate.ids({id : id});
         if (error) {
             return res.status(400).json({ validation_error: error.details[0].message });

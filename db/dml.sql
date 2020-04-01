@@ -15,7 +15,7 @@ CREATE PROCEDURE sp_editaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN p
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_adduser (IN pGivenName VARCHAR(30),  IN pSurName VARCHAR(30),  IN pEmail VARCHAR(50),  IN pPassword Binary(80)) BEGIN IF(pEmail NOT IN (SELECT email FROM Users)) THEN INSERT INTO Users (givenname, surname, email, password) VALUES (pGivenName, pSurName, pEmail, pPassword); CALL sp_addaccount((SELECT id FROM Users WHERE email = pEmail), 'Cash', 0, ''); END IF; END$$
+CREATE PROCEDURE sp_adduser (IN pGivenName VARCHAR(30),  IN pSurName VARCHAR(30),  IN pEmail VARCHAR(50),  IN pPassword Binary(80)) BEGIN IF(pEmail NOT IN (SELECT email FROM Users)) THEN INSERT INTO Users (givenname, surname, email, password) VALUES (pGivenName, pSurName, pEmail, pPassword); CALL sp_addaccount((SELECT id FROM Users WHERE email = pEmail), 'Cash','cash', 0, ''); END IF; END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -79,7 +79,7 @@ CREATE PROCEDURE sp_getaccounttransactionrange (IN puid INT UNSIGNED, IN paid IN
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, amount, category) VALUES (paid, puid, pdate,  ppayee, pamount, pcat); UPDATE Accounts SET balance = balance + pamount WHERE id = paid and payerid = puid; END$$
+CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, amount, category) VALUES (paid, puid, pdate,  ppayee, pamount, pcat); UPDATE Accounts SET balance = balance + pamount WHERE id = paid and userid = puid; END$$
 DELIMITER ;
 
 DELIMITER $$

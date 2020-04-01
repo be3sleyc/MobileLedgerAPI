@@ -44,7 +44,7 @@ validation.newaccount = (data) => {
 validation.editaccount = (data) => {
     const accedit_schema = Joi.object({
         id: Joi.number().positive().max(4294967295).required(),
-        name: Joi.string().max(30),
+        name: Joi.string().max(30).allow(""),
         type: Joi.string().max(20).allow(""),
         notes: Joi.string().max(512).allow("")
     });
