@@ -3,6 +3,8 @@ package info.chorimeb.mobileledgerapp.ui.registration
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -15,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 
 import info.chorimeb.mobileledgerapp.R
 import info.chorimeb.mobileledgerapp.ui.login.LoginActivity
-import info.chorimeb.mobileledgerapp.ui.login.afterTextChanged
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -117,6 +118,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             submit.setOnClickListener {
+                println("You clicked me!")
                 loading.visibility = View.VISIBLE
                 registrationViewModel.register(
                     givenname.text.toString(),
@@ -138,4 +140,17 @@ class RegisterActivity : AppCompatActivity() {
     private fun showRegistrationFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
+}
+
+fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(editable: Editable?) {
+            afterTextChanged.invoke(editable.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    })
+
 }

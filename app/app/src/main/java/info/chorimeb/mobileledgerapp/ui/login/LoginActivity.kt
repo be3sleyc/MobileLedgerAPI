@@ -26,7 +26,6 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
@@ -111,6 +110,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         // TODO : initiate successful logged in experience
+        println("Loading home")
         val intent = Intent(applicationContext, HomeActivity::class.java)
         intent.putExtra("USER_MODEL", model)
         startActivity(intent)

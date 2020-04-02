@@ -11,7 +11,7 @@ class RegistrationDataSource {
         password: String
     ): Result<Boolean> {
         try {
-            // TODO: handle registeration process
+            // TODO: handle registration process
             // val url = "https://192.168.1.7:3000/api/users/register"
 
             return Result.Success(true)

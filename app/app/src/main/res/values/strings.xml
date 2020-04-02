@@ -18,8 +18,8 @@
 
     <string name="invalid_email">Not a valid email address</string>
     <string name="invalid_password">Password must be &gt;6 characters</string>
-    <string name="invalid_firstname">First name must be present and &lt;30 characters</string>
-    <string name="invalid_lastname">Last name must be present and &lt;30 characters</string>
+    <string name="invalid_firstname">First name cannot be blank and must be &lt;30 characters</string>
+    <string name="invalid_lastname">Last name cannot be blank and must be &lt;30 characters</string>
 
     <string name="login_failed">"Login failed"</string>
     <string name="registration_failed">"Registration failed</string>
