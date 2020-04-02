@@ -18,6 +18,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use('/api/', apiRouter);
 
-https.createServer(options, app).listen(process.env.PORT || '443', () => {
-    console.log(`Server live on port: ${process.env.PORT || '443'}`);
+const port = 3000
+
+https.createServer(options, app).listen(port, () => {
+    console.log(`Server live on port: ${port}`);
 });
