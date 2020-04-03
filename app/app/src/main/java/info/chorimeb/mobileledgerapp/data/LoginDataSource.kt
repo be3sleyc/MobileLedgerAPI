@@ -1,7 +1,10 @@
 package info.chorimeb.mobileledgerapp.data
 
+import com.google.gson.GsonBuilder
 import info.chorimeb.mobileledgerapp.data.model.LoggedInUser
 import info.chorimeb.mobileledgerapp.network.NetworkMethods
+import okhttp3.*
+import org.json.JSONObject
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -17,14 +20,16 @@ class LoginDataSource {
 
         return try {
 
-            val putBody = "{email:$username,password:$password}"
+            val putBody = JSONObject("{email:$username,password:$password}").toString()
+            println(putBody)
 
-            val url = "https://192.168.1.7/api/users/login"
+            val url = "http://192.168.1.7/api/users/login"
 
-            val req = network.putRequest(url, putBody)
+            val req = network.putRequest(url, putBody, null)
             network.sendRequest(req)
 
-            val fakeUser = LoggedInUser(
+
+            val user = LoggedInUser(
                 1,
                 "Jane",
                 "Doe",
@@ -33,9 +38,10 @@ class LoginDataSource {
                     "2020-03-22 03:31:01",
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 ),
-                "12345abcde"
+                "abc12345678"
             )
-            Result.Success(fakeUser)
+            Result.Success(user)
+
         } catch (e: Throwable) {
             println(e)
             Result.Error(IOException("Error logging in", e))
@@ -46,4 +52,6 @@ class LoginDataSource {
         // TODO: revoke authentication
     }
 }
+
+
 

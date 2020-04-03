@@ -1,5 +1,6 @@
 package info.chorimeb.mobileledgerapp.network
 
+import com.google.gson.GsonBuilder
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -9,42 +10,65 @@ class NetworkMethods {
 
     private val client = OkHttpClient()
 
-    fun getRequest(url: String, body: String) : Request{
-        return Request.Builder()
-            .url(url)
-            .get()
-            .build()
+    fun getRequest(url: String, token: String?): Request {
+        return if (token == null) {
+            Request.Builder()
+                .url(url)
+                .get()
+                .build()
+        } else {
+            Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("auth-token", token)
+                .build()
+        }
     }
 
-    fun putRequest(url: String, body: String) : Request {
-        return Request.Builder()
-            .url(url)
-            .put(body.toRequestBody(MEDIA_TYPE_JSON))
-            .build()
+    fun putRequest(url: String, body: String, token: String?): Request {
+        return if (token == null) {
+            Request.Builder()
+                .url(url)
+                .put(body.toRequestBody(MEDIA_TYPE_JSON))
+                .build()
+        } else {
+            Request.Builder()
+                .url(url)
+                .put(body.toRequestBody(MEDIA_TYPE_JSON))
+                .addHeader("auth-token", token)
+                .build()
+        }
     }
 
-    fun postRequest(url: String, body: String): Request {
-        return Request.Builder()
-            .url(url)
-            .post(body.toRequestBody(MEDIA_TYPE_JSON))
-            .build()
+    fun postRequest(url: String, body: String, token: String?): Request {
+        return if (token == null) {
+            Request.Builder()
+                .url(url)
+                .post(body.toRequestBody(MEDIA_TYPE_JSON))
+                .build()
+        } else {
+            Request.Builder()
+                .url(url)
+                .post(body.toRequestBody(MEDIA_TYPE_JSON))
+                .addHeader("auth-token", token)
+                .build()
+        }
     }
 
     fun sendRequest(req: Request) {
-        client!!.newCall(req).enqueue(object: Callback {
+        client.newCall(req).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-//                TODO "can't connect due to self signed certificate"
                 e.printStackTrace()
+                throw IOException(e)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) throw IOException("Unexpected $response")
-
-                    for((name, value) in response.headers) {
-                        println("$name:$value")
-                    }
-                    println(response.body!!.string())
+                    val gson =
+                        GsonBuilder().create().fromJson(response.body?.string(), JWT::class.java)
+                    println(gson)
+                    println(response.toString())
                 }
             }
         })
@@ -54,3 +78,5 @@ class NetworkMethods {
         val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
     }
 }
+
+class JWT(token: String)

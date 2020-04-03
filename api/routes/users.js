@@ -10,6 +10,18 @@ const auth = require('./verifyToken');
 
 const saltrounds = 10;
 
+router.get('/', auth, (req, res) => {
+    try {
+        let result = userdb.one_i(req.user.id);
+        result.then(rows => {
+            res.json(rows);
+        });
+    } catch (e) {
+    
+        res.status(500).json({ route_error: e });
+    }
+});
+
 // open to anyone except logged in users.
 router.post('/register', (req, res) => {
     try {
