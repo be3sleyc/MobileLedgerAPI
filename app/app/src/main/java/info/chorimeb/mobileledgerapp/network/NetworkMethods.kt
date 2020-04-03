@@ -9,7 +9,6 @@ class NetworkMethods {
 
     private val client = OkHttpClient()
 
-
     fun getRequest(url: String, body: String) : Request{
         return Request.Builder()
             .url(url)
@@ -32,7 +31,7 @@ class NetworkMethods {
     }
 
     fun sendRequest(req: Request) {
-        client.newCall(req).enqueue(object: Callback {
+        client!!.newCall(req).enqueue(object: Callback {
             override fun onFailure(call: Call, e: IOException) {
 //                TODO "can't connect due to self signed certificate"
                 e.printStackTrace()
