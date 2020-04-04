@@ -43,47 +43,47 @@ CREATE PROCEDURE sp_expiretokens () BEGIN DELETE FROM Bokens WHERE expdate < NOW
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_gettransactions ( IN puid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid; END$$
+CREATE PROCEDURE sp_gettransactions ( IN puid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getrange (IN puid INT UNSIGNED, IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND paiddate BETWEEN pstart AND pstop; END$$
+CREATE PROCEDURE sp_getrange (IN puid INT UNSIGNED, IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND paiddate BETWEEN pstart AND pstop; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_gettransaction (IN puid INT UNSIGNED, IN pid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND T.id = pid; END$$
+CREATE PROCEDURE sp_gettransaction (IN puid INT UNSIGNED, IN pid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND T.id = pid; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getcattransactions (IN puid INT UNSIGNED, IN pcat VARCHAR(255)) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND category = pcat; END$$
+CREATE PROCEDURE sp_getcattransactions (IN puid INT UNSIGNED, IN pcat VARCHAR(255)) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND category = pcat; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getcattransactionrange (IN puid INT UNSIGNED, IN pcat VARCHAR(255), IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND category = pcat AND paiddate BETWEEN pstart AND pstop; END$$
+CREATE PROCEDURE sp_getcattransactionrange (IN puid INT UNSIGNED, IN pcat VARCHAR(255), IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND category = pcat AND paiddate BETWEEN pstart AND pstop; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getpaytransactions (IN puid INT UNSIGNED, IN ppayee VARCHAR(100)) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND payee = ppayee; END$$
+CREATE PROCEDURE sp_getpaytransactions (IN puid INT UNSIGNED, IN ppayee VARCHAR(100)) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND payee = ppayee; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getpaytransactionrange (IN puid INT UNSIGNED, IN ppayee VARCHAR(100), IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND payee = ppayee AND paiddate BETWEEN pstart AND pstop; END$$
+CREATE PROCEDURE sp_getpaytransactionrange (IN puid INT UNSIGNED, IN ppayee VARCHAR(100), IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND payee = ppayee AND paiddate BETWEEN pstart AND pstop; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccounttransactions (IN puid INT UNSIGNED, IN paid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND accountid = paid; END$$
+CREATE PROCEDURE sp_getaccounttransactions (IN puid INT UNSIGNED, IN paid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND accountid = paid; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccounttransactionrange (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND accountid = paid AND paiddate BETWEEN pstart AND pstop; END$$
+CREATE PROCEDURE sp_getaccounttransactionrange (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND accountid = paid AND paiddate BETWEEN pstart AND pstop; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, amount, category) VALUES (paid, puid, pdate,  ppayee, pamount, pcat); UPDATE Accounts SET balance = balance + pamount WHERE id = paid and userid = puid; END$$
+CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, description, amount, category) VALUES (paid, puid, pdate,  ppayee, pdescription, pamount, pcat); UPDATE Accounts SET balance = balance + pamount WHERE id = paid and userid = puid; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_edittransaction (IN puid INT UNSIGNED, IN pid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pcat VARCHAR(255)) BEGIN DECLARE old_amount DECIMAL(13,2) DEFAULT NULL; IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pamount IS NULL OR pammount = '' OR pamount = 0)THEN SELECT amount INTO pamount FROM Transactions WHERE id = pid AND payerid = puid; ELSE SELECT amount INTO old_amount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, amount = pamount, category = pcat WHERE id = pid AND payerid = puid; IF(old_amount IS NOT NULL)THEN UPDATE Accounts SET balance = balance - old_amount + pamount WHERE id = paid AND payerid = puid; END IF; END$$ 
+CREATE PROCEDURE sp_edittransaction (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pamount DECIMAL(13,2), IN pcat VARCHAR(255)) BEGIN DECLARE old_amount DECIMAL(13,2) DEFAULT NULL; IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdescription IS NULL OR pdescription = '')THEN SELECT description INTO pdescription FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pamount IS NULL OR pammount = '' OR pamount = 0)THEN SELECT amount INTO pamount FROM Transactions WHERE id = pid AND payerid = puid; ELSE SELECT amount INTO old_amount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, description = pdescription, amount = pamount, category = pcat WHERE id = pid AND payerid = puid; IF(old_amount IS NOT NULL)THEN UPDATE Accounts SET balance = balance - old_amount + pamount WHERE id = paid AND payerid = puid; END IF; END$$ 
 DELIMITER ;
 
 DELIMITER $$

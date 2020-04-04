@@ -34,6 +34,7 @@ CREATE TABLE Transactions (
     payerid INT UNSIGNED NOT NULL, 
     paiddate DATETIME NOT NULL DEFAULT NOW(), 
     payee VARCHAR(100) NOT NULL,
+    description VARCHAR(100),
     amount DECIMAL(13,2) NOT NULL,
     category VARCHAR(255) NOT NULL DEFAULT 'Misc',
     FOREIGN KEY(payerid) REFERENCES Users(id),

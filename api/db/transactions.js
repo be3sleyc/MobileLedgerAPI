@@ -109,10 +109,10 @@ transactiondb.getaccountsome = (attr) => {
         });
 }
 
-// let attr = [uid, aid, amount, date, payee, category];
+// let attr = [uid, aid, amount, date, payee, description, category];
 transactiondb.add = (attr) => {
     return pool
-        .query("CALL sp_addtransaction (?, ?, ?, ?, ?, ?)", attr)
+        .query("CALL sp_addtransaction (?, ?, ?, ?, ?, ?, ?)", attr)
         .then(res => {
             return res;
         })
@@ -121,10 +121,10 @@ transactiondb.add = (attr) => {
         });
 }
 
-// let attr = [uid, id, aid, amount, date, payee, category];
+// let attr = [uid, id, aid, amount, date, payee, description, category];
 transactiondb.edit = (attr) => {
     return pool
-        .query("CALL sp_edittransaction (?, ?, ?, ?, ?, ?, ?)", attr)
+        .query("CALL sp_edittransaction (?, ?, ?, ?, ?, ?, ?, ?)", attr)
         .then(res => {
             return res;
         })

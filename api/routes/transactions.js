@@ -201,9 +201,10 @@ router.put('/:id/edit', auth, (req, res) => {
         let amount = (req.body.amount === undefined ? null : req.body.amount);
         let paiddate = (req.body.paiddate === undefined ? null : req.body.paiddate);
         let payee = (req.body.payee === undefined ? null : req.body.payee);
+        let description = (req.body.description === undefined ? null : req.body.description);
         let category = (req.body.category === undefined ? null : req.body.category);
 
-        let result = transactiondb.edit([req.user.id, id, accountid, amount, paiddate, payee, category]);
+        let result = transactiondb.edit([req.user.id, id, accountid, amount, paiddate, payee, description, category]);
         result.then(success => {
             if(success.affectedRows == 1) {
                 res.sendStatus(200);
@@ -223,7 +224,9 @@ router.post('/log', auth, (req, res) => {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
 
-        let result = transactiondb.add([req.user.id, req.body.accountid, req.body.amount, req.body.paiddate, req.body.payee, req.body.category]);
+        let description = (req.body.description === undefined ? null : req.body.description)
+
+        let result = transactiondb.add([req.user.id, req.body.accountid, req.body.amount, req.body.paiddate, req.body.payee, description, req.body.category]);
         result.then(success => {
             if(success.affectedRows == 1) {
                 res.sendStatus(200);

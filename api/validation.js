@@ -100,6 +100,7 @@ validation.transactionedit = (data) => {
         amount: Joi.string().pattern(new RegExp('-?[0-9]*(\.[0-9]{2})?')).allow(""),
         paiddate: Joi.date(),
         payee: Joi.string().max(100),
+        description: Joi.string().max(100).allow(""),
         category: Joi.string().max(255)
     });
 
@@ -112,6 +113,7 @@ validation.newtransaction = (data) => {
         amount: Joi.string().pattern(new RegExp('-?[0-9]*(\.[0-9]{2})?')).required(),
         paiddate: Joi.date().required(),
         payee: Joi.string().max(100).required(),
+        description: Joi.string().max(100).allow(""),
         category: Joi.string().max(255).allow("")
     })
 
