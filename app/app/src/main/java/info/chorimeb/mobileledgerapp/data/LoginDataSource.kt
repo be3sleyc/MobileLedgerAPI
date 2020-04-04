@@ -1,9 +1,7 @@
 package info.chorimeb.mobileledgerapp.data
 
-import com.google.gson.GsonBuilder
-import info.chorimeb.mobileledgerapp.data.model.LoggedInUser
+import info.chorimeb.mobileledgerapp.data.model.User
 import info.chorimeb.mobileledgerapp.network.NetworkMethods
-import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 import java.time.LocalDateTime
@@ -16,7 +14,7 @@ class LoginDataSource {
 
     private val network = NetworkMethods()
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(username: String, password: String): Result<User> {
 
         return try {
 
@@ -29,7 +27,7 @@ class LoginDataSource {
             network.sendRequest(req)
 
 
-            val user = LoggedInUser(
+            val user = User(
                 1,
                 "Jane",
                 "Doe",

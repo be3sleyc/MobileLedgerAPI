@@ -29,4 +29,10 @@
     <string name="account_name">Account Name</string>
     <string name="account_balance">$0.00</string>
     <string name="account_icon_describe">account Icon to describe type</string>
+    <string name="expense_amount">$0.00</string>
+    <string name="expense_date">Date</string>
+    <string name="expense_category">Category</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_accountview">Account view</string>
+    <string name="action_expenseview">Expense view</string>
 </resources>

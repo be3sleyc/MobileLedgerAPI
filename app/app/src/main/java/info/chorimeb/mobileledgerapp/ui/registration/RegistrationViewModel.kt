@@ -34,7 +34,6 @@ class RegistrationViewModel(private val registrationRepository: RegistrationRepo
         email: String,
         password: String
     ) {
-        println("Data changed!")
         if (!isFirstNameValid(givenname)) {
             _registrationForm.value =
                 RegistrationFormState(givennameError = R.string.invalid_firstname)
@@ -47,7 +46,6 @@ class RegistrationViewModel(private val registrationRepository: RegistrationRepo
             _registrationForm.value =
                 RegistrationFormState(passwordError = R.string.invalid_password)
         } else {
-            println("No error found here")
             _registrationForm.value = RegistrationFormState(isDataValid = true)
         }
     }

@@ -12,6 +12,9 @@ import info.chorimeb.mobileledgerapp.R
 import info.chorimeb.mobileledgerapp.data.model.Account
 import kotlinx.android.synthetic.main.layout_accountlistitem.view.*
 import java.net.URI
+import java.text.NumberFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AccountRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -58,7 +61,8 @@ class AccountRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
             )
             accountName.text = account.name
-            accountBalance.text = account.balance.toString()
+            accountBalance.text =
+                NumberFormat.getCurrencyInstance(Locale.US).format(account.balance)
         }
     }
 

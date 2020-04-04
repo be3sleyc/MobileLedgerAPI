@@ -10,15 +10,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.lifecycle.ViewModelProvider
 
 import info.chorimeb.mobileledgerapp.R
 import info.chorimeb.mobileledgerapp.ui.registration.RegisterActivity
-import info.chorimeb.mobileledgerapp.ui.home.HomeActivity
+import info.chorimeb.mobileledgerapp.ui.home.HomeAccountActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -111,7 +108,7 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUiWithUser(model: LoggedInUserView) {
         // TODO : initiate successful logged in experience
         println("Loading home")
-        val intent = Intent(applicationContext, HomeActivity::class.java)
+        val intent = Intent(applicationContext, HomeAccountActivity::class.java)
         intent.putExtra("USER_MODEL", model)
         startActivity(intent)
     }
