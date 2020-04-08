@@ -94,7 +94,9 @@ router.put('/login', (req, res) => {
                                     if (err) {
                                         return res.json({ token_error: err });
                                     }
-                                    res.header('auth-token', token).json({ token: token, user: user[0][0] });
+                                    let repUser = user[0][0]
+                                    repUser['token'] = token
+                                    res.header('auth-token', token).json({ user: repUser });
                                 });
 
                             });
