@@ -39,6 +39,7 @@ accountdb.add = (attr) => {
 
 // let attr = [id, uid, name, type, note];
 accountdb.edit = (attr) => {
+    console.log(attr)
     return pool
         .query("CALL sp_editaccount (?, ?, ?, ?, ?)", attr)
         .then(res => {

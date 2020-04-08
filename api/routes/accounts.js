@@ -20,8 +20,8 @@ router.get('/', auth, (req, res) => {
 router.get('/:id', auth, (req, res) => {
     try {
         let id = parseInt(req.params.id);
-        
-        const { error } = validate.ids({id : id});
+
+        const { error } = validate.ids({ id: id });
         if (error) {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
@@ -38,16 +38,24 @@ router.get('/:id', auth, (req, res) => {
 router.put('/:id/edit', auth, (req, res) => {
     try {
         let name = "";
-        let notes = null;
+        let type = "";
+        let notes = "";
+        
         if (req.body.name) { name = req.body.name; }
+        if (req.body.type !== undefined) { type = req.body.type; }
         if (req.body.notes !== undefined) { notes = req.body.notes; }
+        
 
-        const { error } = validate.editaccount({ id: req.params.id, name: name, type: req.body.type, notes: notes });
+        console.log(req.user, req.body)
+
+        const { error } = validate.editaccount({ id: req.params.id, name: name, type: type, notes: notes });
         if (error) {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
 
-        let result = accountdb.edit([req.params.id, req.user.id, name, req.body.type, notes]);
+        console.log([req.params.id, req.user.id, name, type, notes])
+
+        let result = accountdb.edit([req.params.id, req.user.id, name, type, notes]);
         result.then(row => {
             if (row.affectedRows == 1) {
                 res.sendStatus(200);
