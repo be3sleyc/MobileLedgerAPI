@@ -45,15 +45,10 @@ router.put('/:id/edit', auth, (req, res) => {
         if (req.body.type !== undefined) { type = req.body.type; }
         if (req.body.notes !== undefined) { notes = req.body.notes; }
         
-
-        console.log(req.user, req.body)
-
         const { error } = validate.editaccount({ id: req.params.id, name: name, type: type, notes: notes });
         if (error) {
             return res.status(400).json({ validation_error: error.details[0].message });
         }
-
-        console.log([req.params.id, req.user.id, name, type, notes])
 
         let result = accountdb.edit([req.params.id, req.user.id, name, type, notes]);
         result.then(row => {
