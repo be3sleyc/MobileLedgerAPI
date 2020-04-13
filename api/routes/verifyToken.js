@@ -7,19 +7,19 @@ module.exports = (req, res, next) => {
 
     // if there is no token, deny
     if (!token) {
-        return res.status(401).json({ auth_error: 'Access Denied' });
+        return res.status(401).json({ message: 'Access Denied' });
     }
 
     try {
         let blacklist = tokendb.lookup(token);
-        blacklist.then( row => {
-            if(row.length > 0) {
-                return res.status(401).json({ auth_error: 'Access Denied' });
+        blacklist.then(row => {
+            if (row.length > 0) {
+                return res.status(401).json({ message: 'Access Denied' });
             } else {
                 jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
                     if (err) {
-                        
-                        return res.status(401).json({ error: 'Invalid Token' });
+
+                        return res.status(401).json({ message: 'Invalid Token' });
                     } else {
                         req.user = payload;
                         next();
@@ -27,7 +27,7 @@ module.exports = (req, res, next) => {
                 });
             }
         });
-    } catch(e) {
+    } catch (e) {
         return res.status(500).json({ route_error: e });
     }
 }

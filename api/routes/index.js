@@ -10,7 +10,7 @@ router.use('/accounts/', accountRouter);
 router.use('/transactions', transactionRouter);
 
 router.get('/', (req, res, next) => {
-    res.json({ test: 'test' });
+    res.json({ message: 'test' });
 });
 
 module.exports = router;

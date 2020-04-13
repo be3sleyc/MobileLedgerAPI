@@ -23,11 +23,11 @@ CREATE PROCEDURE sp_login (IN pEmail VARCHAR(50), IN pPassword BINARY(80)) BEGIN
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getuserid (IN pid INT UNSIGNED) BEGIN SELECT id, givenname, surname, email FROM Users WHERE id = pid; END$$
+CREATE PROCEDURE sp_getuserid (IN pid INT UNSIGNED) BEGIN SELECT id, email, givenname, surname, lastaccess FROM Users WHERE id = pid; END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getuseremail (IN pEmail VARCHAR(50)) BEGIN SELECT id, givenname, surname, email, password FROM Users WHERE email = pemail; END$$ 
+CREATE PROCEDURE sp_getuseremail (IN pEmail VARCHAR(50)) BEGIN SELECT id, email, givenname, surname, lastaccess, password FROM Users WHERE email = pemail; END$$ 
 DELIMITER ;
 
 DELIMITER $$

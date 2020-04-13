@@ -19,13 +19,20 @@ const app = express();
 app.use(bodyParser.json());
 app.use('/api/', apiRouter);
 
+app.use(function (req, res, next) {
+    res.status(404);
+
+    res.send({ message: '404 Not found' });
+    return;
+});
+
 const sport = 3000
 const port = 3030
 
 http.createServer(app).listen(port, () => {
-    console.log(`Server live on port: ${port}`);
+    console.log(`Server live on port: ${port} - http`);
 });
 
 https.createServer(options, app).listen(sport, () => {
-    console.log(`Server live on port: ${sport}`);
+    console.log(`Server live on port: ${sport} - https`);
 });
