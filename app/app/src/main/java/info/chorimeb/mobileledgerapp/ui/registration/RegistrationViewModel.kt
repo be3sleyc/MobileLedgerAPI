@@ -4,7 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import info.chorimeb.mobileledgerapp.data.RegistrationRepository
+import info.chorimeb.mobileledgerapp.data.repository.RegistrationRepository
 import info.chorimeb.mobileledgerapp.data.Result
 
 import info.chorimeb.mobileledgerapp.R

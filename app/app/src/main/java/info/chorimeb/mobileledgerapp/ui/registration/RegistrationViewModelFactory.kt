@@ -3,7 +3,7 @@ package info.chorimeb.mobileledgerapp.ui.registration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import info.chorimeb.mobileledgerapp.data.RegistrationDataSource
-import info.chorimeb.mobileledgerapp.data.RegistrationRepository
+import info.chorimeb.mobileledgerapp.data.repository.RegistrationRepository
 
 class RegistrationViewModelFactory : ViewModelProvider.Factory {
 

@@ -1,14 +1,13 @@
-package info.chorimeb.mobileledgerapp.data
+package info.chorimeb.mobileledgerapp.data.repository
 
-class RegistrationRepository(val dataSource: RegistrationDataSource) {
+import androidx.lifecycle.LiveData
+
+interface RegistrationRepository {
 
     suspend fun register(
         givenname: String,
         surname: String,
         email: String,
         password: String
-    ): Result<Boolean> {
-
-        return dataSource.register(givenname, surname, email, password)
-    }
+    ): LiveData<Boolean>
 }

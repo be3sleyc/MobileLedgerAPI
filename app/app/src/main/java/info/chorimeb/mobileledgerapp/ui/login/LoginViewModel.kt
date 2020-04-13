@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import info.chorimeb.mobileledgerapp.data.LoginRepository
+import info.chorimeb.mobileledgerapp.data.repository.LoginRepository
 import info.chorimeb.mobileledgerapp.data.Result
 
 import info.chorimeb.mobileledgerapp.R
@@ -28,11 +28,9 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    fun loginDataChanged(email: String, password: String) {
+    fun loginDataChanged(email: String) {
         if (!isEmailValid(email)) {
             _loginForm.value = LoginFormState(emailError = R.string.invalid_email)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
@@ -44,9 +42,5 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         } else {
             email.isNotBlank()
         }
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 6
     }
 }

@@ -1,6 +1,6 @@
 package info.chorimeb.mobileledgerapp.data.model
 
-class RegisterUser(
+data class RegisterRequest(
     val email: String,
     val firstname: String,
     val lastname: String,

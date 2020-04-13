@@ -1,7 +1,5 @@
-package info.chorimeb.mobileledgerapp.data
+package info.chorimeb.mobileledgerapp.ui.home
 
-import android.net.Uri
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import info.chorimeb.mobileledgerapp.R
 import info.chorimeb.mobileledgerapp.data.model.Account
 import kotlinx.android.synthetic.main.layout_accountlistitem.view.*
-import java.net.URI
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AccountRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var items: ArrayList<Account> = ArrayList()
+class AccountRecyclerAdapter(private val items: ArrayList<Account>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return AccountViewHolder(
@@ -39,11 +34,7 @@ class AccountRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return items.size
     }
 
-    fun submitList(accountList: ArrayList<Account>) {
-        items = accountList
-    }
-
-    class AccountViewHolder constructor(
+    inner class AccountViewHolder constructor(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
         private val accountIcon: ImageView = itemView.accountTypeIcon
@@ -53,10 +44,10 @@ class AccountRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(account: Account) {
             accountIcon.setImageResource(
                 when (account.type) {
-                    "credit" -> R.drawable.ic_launcher_background
-                    "debit" -> R.drawable.ic_launcher_background
-                    "cash" -> R.drawable.ic_launcher_background
-                    "savings" -> R.drawable.ic_launcher_background
+                    "credit" -> R.drawable.ic_credit
+                    "debit" -> R.drawable.ic_credit
+                    "cash" -> R.drawable.ic_cash
+                    "savings" -> R.drawable.ic_lend
                     else -> R.drawable.ic_launcher_background
                 }
             )

@@ -1,5 +1,5 @@
 package info.chorimeb.mobileledgerapp.data.model
 
-class EditAccountRequest {
+data class EditAccountRequest(val name: String, val type: String, val notes: String) {
 
 }

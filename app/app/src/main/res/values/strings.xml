@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">MobileLedgerApp</string>
+    <string name="app_version" translatable="false">"v1.0.0"</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -17,22 +19,89 @@
     <string name="register_success">Registration Succeeded</string>
 
     <string name="invalid_email">Not a valid email address</string>
-    <string name="invalid_password">Password must be &gt;6 characters</string>
-    <string name="invalid_firstname">First name cannot be blank and must be &lt;30 characters</string>
-    <string name="invalid_lastname">Last name cannot be blank and must be &lt;30 characters</string>
+    <string name="invalid_password">Password must be longer than 6 characters</string>
+    <string name="invalid_firstname">First name cannot be blank and must be shorter than 30 characters</string>
+    <string name="invalid_lastname">Last name cannot be blank and must be shorter than 30 characters</string>
 
     <string name="login_failed">"Login failed"</string>
     <string name="registration_failed">"Registration failed</string>
 
     <string name="add_account">Add Account</string>
     <string name="add_transaction">Add Transaction</string>
-    <string name="account_name">Account Name</string>
-    <string name="account_balance">$0.00</string>
+
+    <string name="account_balance" translatable="false">$0.00</string>
     <string name="account_icon_describe">account Icon to describe type</string>
-    <string name="expense_amount">$0.00</string>
+
+    <string name="expense_amount" translatable="false">$0.00</string>
     <string name="expense_date">Date</string>
     <string name="expense_category">Category</string>
+
     <string name="action_logout">Logout</string>
+
     <string name="action_accountview">Account view</string>
     <string name="action_expenseview">Expense view</string>
+
+    <string name="title_accounts">Accounts</string>
+
+    <string name="title_transactions">Transactions</string>
+    <string name="accountList_failure">Failed to get accounts</string>
+    <string name="expenseList_failure">Failed to get expenses</string>
+    <string name="hint_payee">Payee</string>
+    <string name="hint_amount" translatable="false">0.00</string>
+    <string name="hint_description">description</string>
+    <string name="btn_save">Save</string>
+    <string name="hint_accountName">Account Name</string>
+    <string name="hint_accountNotes">Notes</string>
+    <string name="search_hint">Search</string>
+    <string name="action_search">Search</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Strings -->
+    <string name="pref_general_category_title">General</string>
+
+    <string name="pref_language_title">"Language"</string>
+
+    <string name="pref_default_language_entry">"English"</string>
+    <string name="pref_default_language_value" translatable="false">"EN"</string>
+
+    <string-array name="pref_language_list_entries" translatable="false">
+        <item>"English"</item>
+        <item>Española</item>
+    </string-array>
+
+    <string-array name="pref_language_list_values" translatable="false">
+        <item>"EN"</item>
+        <item>"ES"</item>
+    </string-array>
+
+    <string name="pref_date_format_title">"Date format"</string>
+
+    <string name="pref_default_date_format_entry" translatable="false">"04/18/2020"</string>
+    <string name="pref_default_date_format_value" translatable="false">"dd/mm/yyyy"</string>
+
+    <string-array name="pref_date_format_list_entries" translatable="false">
+        <item>"04/18/2020"</item>
+        <item>"2020/04/18"</item>
+    </string-array>
+
+    <string-array name="pref_date_format_list_values" translatable="false">
+        <item>"dd/mm/yyyy"</item>
+        <item>"yyyy/mm/dd"</item>
+    </string-array>
+
+    <string name="pref_24h_switch_title">"Use 24-hour format"</string>
+    <string name="pref_24h_switch_summary" translatable="false">"00:00"</string>
+
+    <string name="pref_support_about_title">"About"</string>
+
+    <string name="pref_author_title">"Author Christian Beesley"</string>
+    <string name="pref_source_summary" translatable="false">"GitHub"</string>
+
+    <string name="pref_app_title" translatable="false">@string/app_name</string>
+    <string name="pref_app_summary" translatable="false">@string/app_version</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="action_settings">Settings</string>
+
+
 </resources>

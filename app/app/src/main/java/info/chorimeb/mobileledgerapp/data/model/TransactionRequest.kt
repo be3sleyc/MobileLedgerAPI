@@ -1,6 +1,6 @@
 package info.chorimeb.mobileledgerapp.data.model
 
-class NewTransactionReq(
+data class TransactionRequest(
     val accountid: Int,
     val amount: Double,
     val paiddate: String,

@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 
 import info.chorimeb.mobileledgerapp.R
 import info.chorimeb.mobileledgerapp.ui.registration.RegisterActivity
-import info.chorimeb.mobileledgerapp.ui.home.HomeAccountActivity
+import info.chorimeb.mobileledgerapp.ui.home.HomeActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-                .get(LoginViewModel::class.java)
+            .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -65,16 +65,14 @@ class LoginActivity : AppCompatActivity() {
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
+                username.text.toString()
             )
         }
 
         password.apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                        username.text.toString(),
-                        password.text.toString()
+                    username.text.toString()
                 )
             }
 
@@ -82,8 +80,8 @@ class LoginActivity : AppCompatActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                                username.text.toString(),
-                                password.text.toString()
+                            username.text.toString(),
+                            password.text.toString()
                         )
                 }
                 false
@@ -96,7 +94,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        register.setOnClickListener{showRegistration()}
+        register.setOnClickListener { showRegistration() }
 
     }
 
@@ -108,18 +106,13 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUiWithUser(model: LoggedInUserView) {
         // TODO : initiate successful logged in experience
         println("Loading home")
-        val intent = Intent(applicationContext, HomeAccountActivity::class.java)
+        val intent = Intent(applicationContext, HomeActivity::class.java)
         intent.putExtra("USER_MODEL", model)
         startActivity(intent)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        lateinit var instance: LoginActivity
-            private set
     }
 }
 

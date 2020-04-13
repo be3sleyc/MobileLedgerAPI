@@ -3,7 +3,7 @@ package info.chorimeb.mobileledgerapp.ui.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import info.chorimeb.mobileledgerapp.data.LoginDataSource
-import info.chorimeb.mobileledgerapp.data.LoginRepository
+import info.chorimeb.mobileledgerapp.data.repository.LoginRepository
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
@@ -16,7 +16,7 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(
                     loginRepository = LoginRepository(
-                            dataSource = LoginDataSource()
+                        dataSource = LoginDataSource()
                     )
             ) as T
         }

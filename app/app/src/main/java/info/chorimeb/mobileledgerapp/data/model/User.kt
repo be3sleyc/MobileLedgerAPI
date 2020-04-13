@@ -1,16 +1,18 @@
 package info.chorimeb.mobileledgerapp.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
-import java.time.LocalDateTime
 
-/**
- * Data class that captures user information for logged in users retrieved from LoginRepository
- */
+@Entity(tableName = "Users")
 data class User(
-        val userId: Int,
-        val givenName: String,
-        val surName: String,
-        val email: String,
-        val lastAccess: LocalDateTime,
-        val token: String
-) : Serializable { val displayName: String = "$givenName  $surName"}
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
+    val email: String,
+    val givenname: String,
+    val surname: String,
+    val lastaccess: String,
+    val token: String
+) : Serializable {
+    var displayName: String = "${this.givenname} ${this.surname}"
+}

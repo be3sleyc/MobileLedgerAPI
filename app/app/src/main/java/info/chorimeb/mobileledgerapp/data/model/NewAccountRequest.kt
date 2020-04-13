@@ -1,5 +1,10 @@
 package info.chorimeb.mobileledgerapp.data.model
 
-class NewAccountRequest {
+data class NewAccountRequest(
+    val name: String,
+    val type: String,
+    val balance: Double,
+    val notes: String
+) {
 
 }
