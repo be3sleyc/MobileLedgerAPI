@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 
 class AccountRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var items: List<Account> = ArrayList()
+    private var items: ArrayList<Account> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return AccountViewHolder(
@@ -39,7 +39,7 @@ class AccountRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return items.size
     }
 
-    fun submitList(accountList: List<Account>) {
+    fun submitList(accountList: ArrayList<Account>) {
         items = accountList
     }
 

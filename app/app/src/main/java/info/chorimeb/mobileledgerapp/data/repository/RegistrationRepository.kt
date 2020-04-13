@@ -2,7 +2,7 @@ package info.chorimeb.mobileledgerapp.data
 
 class RegistrationRepository(val dataSource: RegistrationDataSource) {
 
-    fun register(
+    suspend fun register(
         givenname: String,
         surname: String,
         email: String,
