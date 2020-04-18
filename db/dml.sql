@@ -31,7 +31,7 @@ CREATE PROCEDURE sp_getuseremail (IN pEmail VARCHAR(50)) BEGIN SELECT id, email,
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_logout (IN ptoken VARBINARY(300), IN puid INT UNSIGNED, IN pexp DATETIME ) BEGIN INSERT INTO Bokens VALUES (ptoken, puid, pexp); END$$
+CREATE PROCEDURE sp_logout (IN ptoken VARBINARY(300), IN puid INT UNSIGNED, IN pexp DATETIME ) BEGIN call sp_expiretokens(); INSERT INTO Bokens VALUES (ptoken, puid, pexp); END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -89,3 +89,8 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE sp_getcategories (IN puid INT UNSIGNED) BEGIN SELECT DISTINCT category FROM Transactions WHERE payerid = puid ORDER BY category DESC; END $$
 DELIMITER ;
+
+CREATE DEFINER=`root`@`localhost` TRIGGER tr_resetaccountbalance
+AFTER DELETE 
+    ON Transactions FOR EACH ROW
+    UPDATE Accounts SET balance = balance - Old.amount WHERE id = Old.accountid;
