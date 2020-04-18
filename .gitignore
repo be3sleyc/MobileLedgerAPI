@@ -5,3 +5,4 @@ api/node_modules/*
 *.crt
 *.key
 testdata.*
+MobileLedger/
