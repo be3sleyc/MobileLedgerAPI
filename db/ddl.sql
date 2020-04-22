@@ -16,6 +16,7 @@ CREATE TABLE Accounts (
     type VARCHAR(20) NULL,
     balance DECIMAL(13,2) NOT NULL DEFAULT 0,
     notes VARCHAR(512),
+    isdeleted Boolean NOT NULL DEFAULT FALSE
     FOREIGN KEY(userid) REFERENCES Users(id)
     CONSTRAINT UNIQUE (id, userid, name)
 );
@@ -38,6 +39,6 @@ CREATE TABLE Transactions (
     amount DECIMAL(13,2) NOT NULL,
     category VARCHAR(255) NOT NULL DEFAULT 'Misc',
     FOREIGN KEY(payerid) REFERENCES Users(id),
-    FOREIGN KEY(accountid) REFERENCES Accounts(id)    
+    FOREIGN KEY(accountid) REFERENCES Accounts(id)   
 );
 ALTER TABLE Transactions AUTO_INCREMENT = 31;

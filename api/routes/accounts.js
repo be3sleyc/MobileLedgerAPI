@@ -63,6 +63,28 @@ router.put('/:id/edit', auth, (req, res) => {
     }
 });
 
+router.put('/:id/close', auth, (req, res) => {
+    try {
+        let id = parseInt(req.params.id);
+
+        const { error } = validate.ids({ id: id });
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+        
+        let result = accountdb.close([req.user.id, id]);
+        result.then(row => {
+            if (row.affectedRows == 1) {
+                res.status(200).json({ message: "Close successful" });
+            } else {
+                res.status(400).json({ message: "Close failed" });
+            }
+        })
+    } catch (e) {
+        res.status(500).json({ route_error: e });
+    }
+});
+
 router.post('/add', auth, (req, res) => {
     try {
         let balance = null;

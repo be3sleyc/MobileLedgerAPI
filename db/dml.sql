@@ -3,7 +3,7 @@ CREATE PROCEDURE sp_addaccount (IN pUid INT UNSIGNED, IN pName VARCHAR(30), IN p
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pid; END$$
+CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pid AND isdeleted = 0; END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -12,6 +12,10 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE sp_editaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN pname VARCHAR(30), IN ptype VARCHAR(20), IN pnotes VARCHAR(512)) BEGIN IF(pname = '' OR pname IS NULL) THEN SELECT name INTO pname FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(ptype = '' OR ptype IS NULL) THEN SELECT type INTO ptype FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(pnotes = '' OR pnotes IS NULL) THEN SELECT notes INTO pnotes FROM Accounts WHERE id = pid AND userid = puid; END IF; UPDATE Accounts SET name = pname, type = ptype, notes = pnotes WHERE id = pid AND userid = puid; END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_closeaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED) BEGIN UPDATE Accounts SET isdeleted = 1 WHERE id = pid AND userid = puid; END$$
 DELIMITER ;
 
 DELIMITER $$
