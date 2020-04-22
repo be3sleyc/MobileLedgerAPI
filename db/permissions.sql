@@ -80,6 +80,9 @@ Grant Execute ON PROCEDURE `MobileLedger`.`sp_addtransaction` TO 'gary'@'192.168
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_edittransaction` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_edittransaction` TO 'gary'@'192.168.1.124';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_edittransaction` TO 'gary'@'192.168.1.7';
+GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_deletetransaction` TO 'gary'@'localhost';
+GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_deletetransaction` TO 'gary'@'192.168.1.124';
+GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_deletetransaction` TO 'gary'@'192.168.1.7';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcategories` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcategories` TO 'gary'@'192.168.1.124';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcategories` TO 'gary'@'192.168.1.7';
