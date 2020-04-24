@@ -228,7 +228,7 @@ router.post('/log', auth, (req, res) => {
 
         let description = (req.body.description === undefined ? null : req.body.description)
 
-        let result = transactiondb.add([req.body.accountid, req.user.id, req.body.amount, req.body.paiddate, req.body.payee, description, req.body.category]);
+        let result = transactiondb.add([req.user.id, req.body.accountid, req.body.amount, req.body.paiddate, req.body.payee, description, req.body.category]);
         result.then(success => {
             if (success.affectedRows == 1) {
                 res.status(201).json({ message: 'Creation successful' })
