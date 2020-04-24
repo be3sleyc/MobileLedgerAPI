@@ -72,7 +72,7 @@ router.put('/:id/close', auth, (req, res) => {
             return res.status(400).json({ message: error.details[0].message });
         }
         
-        let result = accountdb.close([req.user.id, id]);
+        let result = accountdb.close([id, req.user.id]);
         result.then(row => {
             if (row.affectedRows == 1) {
                 res.status(200).json({ message: "Close successful" });
