@@ -249,9 +249,10 @@ router.put('/:id/delete', auth, (req, res) => {
         }
 
         let result = transactiondb.delete([req.user.id, id]);
-        result.then(row => {
-            let transaction = row[0][0]
-            res.status(200).json({ message: 'Delete successful' })
+        result.then(success => {
+            if (success.affectedRows == 1) {
+                res.status(200).json({ message: 'Delete successful' })
+            }
         })
     } catch (e) {
         res.status(500).json({ route_error: e });
