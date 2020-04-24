@@ -206,7 +206,7 @@ router.put('/:id/edit', auth, (req, res) => {
         let description = (req.body.description === undefined ? null : req.body.description);
         let category = (req.body.category === undefined ? null : req.body.category);
 
-        let result = transactiondb.edit([id, req.user.id, accountid, amount, paiddate, payee, description, category]);
+        let result = transactiondb.edit([id, req.user.id, accountid, paiddate, payee, description, amount, category]);
         result.then(success => {
             if (success.affectedRows == 1) {
                 res.status(200).json({ message: 'Edit successful' })
