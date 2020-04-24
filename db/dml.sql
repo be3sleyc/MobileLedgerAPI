@@ -87,11 +87,11 @@ CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, 
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_edittransaction (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pamount DECIMAL(13,2), IN pcat VARCHAR(255)) BEGIN DECLARE old_amount DECIMAL(13,2) DEFAULT NULL; IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdescription IS NULL OR pdescription = '')THEN SELECT description INTO pdescription FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pamount IS NULL OR pammount = '' OR pamount = 0)THEN SELECT amount INTO pamount FROM Transactions WHERE id = pid AND payerid = puid; ELSE SELECT amount INTO old_amount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, description = pdescription, amount = pamount, category = pcat WHERE id = pid AND payerid = puid; END$$ 
+CREATE PROCEDURE sp_edittransaction (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pamount DECIMAL(13,2), IN pcat VARCHAR(255)) BEGIN DECLARE old_amount DECIMAL(13,2) DEFAULT NULL; IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdescription IS NULL OR pdescription = '')THEN SELECT description INTO pdescription FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pamount IS NULL OR pamount = '' OR pamount = 0)THEN SELECT amount INTO pamount FROM Transactions WHERE id = pid AND payerid = puid; ELSE SELECT amount INTO old_amount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, description = pdescription, amount = pamount, category = pcat WHERE id = pid AND payerid = puid; END$$ 
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_deletetransaction (IN pid INT UNSIGNED, puid INT UNSIGNED) BEGIN DELETE FROM TRANSACTIONS WHERE id = pid AND payerid = puid; END $$
+CREATE PROCEDURE sp_deletetransaction (puid INT UNSIGNED, IN pid INT UNSIGNED) BEGIN DELETE FROM Transactions WHERE id = pid AND payerid = puid; END $$
 DELIMITER ;
 
 DELIMITER $$
@@ -103,12 +103,17 @@ AFTER DELETE
     ON Transactions FOR EACH ROW
     UPDATE Accounts SET balance = balance - Old.amount WHERE id = Old.accountid;
 
+DELIMITER $$
 CREATE DEFINER=`root`@`localhost` TRIGGER tr_updateaccountbalance
 AFTER UPDATE 
     ON Transactions FOR EACH ROW
+    BEGIN
     UPDATE Accounts SET balance = balance - Old.amount WHERE id = Old.accountid;
+    UPDATE Accounts SET balance = balance + New.amount WHERE id = New.accountid;
+    END $$
+DELIMITER ;
 
 CREATE DEFINER=`root`@`localhost` TRIGGER tr_incrementaccountbalance
 AFTER INSERT 
     ON Transactions FOR EACH ROW
-    UPDATE Accounts SET balance = balance + amount WHERE id = accountid;
+    UPDATE Accounts SET balance = balance + New.amount WHERE id = New.accountid;
