@@ -121,7 +121,7 @@ transactiondb.add = (attr) => {
         });
 }
 
-// let attr = [uid, id, aid, amount, date, payee, description, category];
+// let attr = [id, uid, aid, amount, date, payee, description, category];
 transactiondb.edit = (attr) => {
     return pool
         .query("CALL sp_edittransaction (?, ?, ?, ?, ?, ?, ?, ?)", attr)
