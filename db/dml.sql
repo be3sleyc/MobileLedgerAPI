@@ -3,7 +3,7 @@ CREATE PROCEDURE sp_addaccount (IN pUid INT UNSIGNED, IN pName VARCHAR(30), IN p
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pid; END$$
+CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pid AND isdeleted = 0; END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -12,6 +12,10 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE sp_editaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN pname VARCHAR(30), IN ptype VARCHAR(20), IN pnotes VARCHAR(512)) BEGIN IF(pname = '' OR pname IS NULL) THEN SELECT name INTO pname FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(ptype = '' OR ptype IS NULL) THEN SELECT type INTO ptype FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(pnotes = '' OR pnotes IS NULL) THEN SELECT notes INTO pnotes FROM Accounts WHERE id = pid AND userid = puid; END IF; UPDATE Accounts SET name = pname, type = ptype, notes = pnotes WHERE id = pid AND userid = puid; END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_closeaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED) BEGIN UPDATE Accounts SET isdeleted = 1 WHERE id = pid AND userid = puid; END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -31,7 +35,7 @@ CREATE PROCEDURE sp_getuseremail (IN pEmail VARCHAR(50)) BEGIN SELECT id, email,
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_logout (IN ptoken VARBINARY(300), IN puid INT UNSIGNED, IN pexp DATETIME ) BEGIN INSERT INTO Bokens VALUES (ptoken, puid, pexp); END$$
+CREATE PROCEDURE sp_logout (IN ptoken VARBINARY(300), IN puid INT UNSIGNED, IN pexp DATETIME ) BEGIN call sp_expiretokens(); INSERT INTO Bokens VALUES (ptoken, puid, pexp); END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -79,13 +83,32 @@ CREATE PROCEDURE sp_getaccounttransactionrange (IN puid INT UNSIGNED, IN paid IN
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, description, amount, category) VALUES (paid, puid, pdate,  ppayee, pdescription, pamount, pcat); UPDATE Accounts SET balance = balance + pamount WHERE id = paid and userid = puid; END$$
+CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, description, amount, category) VALUES (paid, puid, pdate,  ppayee, pdescription, pamount, pcat); END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_edittransaction (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pamount DECIMAL(13,2), IN pcat VARCHAR(255)) BEGIN DECLARE old_amount DECIMAL(13,2) DEFAULT NULL; IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdescription IS NULL OR pdescription = '')THEN SELECT description INTO pdescription FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pamount IS NULL OR pammount = '' OR pamount = 0)THEN SELECT amount INTO pamount FROM Transactions WHERE id = pid AND payerid = puid; ELSE SELECT amount INTO old_amount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, description = pdescription, amount = pamount, category = pcat WHERE id = pid AND payerid = puid; IF(old_amount IS NOT NULL)THEN UPDATE Accounts SET balance = balance - old_amount + pamount WHERE id = paid AND payerid = puid; END IF; END$$ 
+CREATE PROCEDURE sp_edittransaction (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pamount DECIMAL(13,2), IN pcat VARCHAR(255)) BEGIN DECLARE old_amount DECIMAL(13,2) DEFAULT NULL; IF(paid IS NULL OR paid = '')THEN SELECT accountid INTO paid FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdate IS NULL OR pdate = '')THEN SELECT paiddate INTO pdate FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(ppayee IS NULL OR ppayee = '')THEN SELECT payee INTO ppayee FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pdescription IS NULL OR pdescription = '')THEN SELECT description INTO pdescription FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pamount IS NULL OR pammount = '' OR pamount = 0)THEN SELECT amount INTO pamount FROM Transactions WHERE id = pid AND payerid = puid; ELSE SELECT amount INTO old_amount FROM Transactions WHERE id = pid AND payerid = puid; END IF; IF(pcat IS NULL OR pcat = '')THEN SELECT category INTO pcat FROM Transactions WHERE id = pid AND payerid = puid; END IF; UPDATE Transactions SET accountid = paid, paiddate = pdate, payee = ppayee, description = pdescription, amount = pamount, category = pcat WHERE id = pid AND payerid = puid; END$$ 
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE sp_deletetransaction (IN pid INT UNSIGNED, puid INT UNSIGNED) BEGIN DELETE FROM TRANSACTIONS WHERE id = pid AND payerid = puid; END $$
 DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE sp_getcategories (IN puid INT UNSIGNED) BEGIN SELECT DISTINCT category FROM Transactions WHERE payerid = puid ORDER BY category DESC; END $$
 DELIMITER ;
+
+CREATE DEFINER=`root`@`localhost` TRIGGER tr_resetaccountbalance
+AFTER DELETE 
+    ON Transactions FOR EACH ROW
+    UPDATE Accounts SET balance = balance - Old.amount WHERE id = Old.accountid;
+
+CREATE DEFINER=`root`@`localhost` TRIGGER tr_updateaccountbalance
+AFTER UPDATE 
+    ON Transactions FOR EACH ROW
+    UPDATE Accounts SET balance = balance - Old.amount WHERE id = Old.accountid;
+
+CREATE DEFINER=`root`@`localhost` TRIGGER tr_incrementaccountbalance
+AFTER INSERT 
+    ON Transactions FOR EACH ROW
+    UPDATE Accounts SET balance = balance + amount WHERE id = accountid;

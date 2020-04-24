@@ -33,7 +33,7 @@ accountdb.add = (attr) => {
             return res;
         })
         .catch(err => {
-            return { db_error: err }
+            return { db_error: err };
         })
 }
 
@@ -47,6 +47,17 @@ accountdb.edit = (attr) => {
         .catch(err => {
             return { db_error: err };
         });
+}
+
+accountdb.close = (attr) => {
+    return pool
+        .query("CALL sp_closeaccount (?, ?)", attr)
+        .then(res => { 
+            return res; 
+        })
+        .catch(err => { 
+            return { db_error: err }; 
+        })
 }
 
 module.exports = accountdb;

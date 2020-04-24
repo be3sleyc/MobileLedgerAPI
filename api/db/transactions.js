@@ -133,6 +133,18 @@ transactiondb.edit = (attr) => {
         });
 }
 
+// let attr = [uid, id];
+transactiondb.delete = (attr) => {
+    return pool
+        .query("CALL sp_deletetransaction (?, ?)", attr)
+        .then(row => {
+            return row;
+        })
+        .catch(err => {
+            return { db_error: err };
+        });
+};
+
 transactiondb.categories = (uid) => {
     return pool
         .query("CALL sp_getcategories (?)", uid)

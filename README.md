@@ -8,7 +8,7 @@ API and mobile app for tracking personal cash flows.
 
 * POST /api/users/register {first name, last name, email, password} 200 OK
 * PUT /api/users/login {email, password} 200 token, \[user]
-* GET /api/users/logout {token} 200 OK
+* PUT /api/users/logout {token} 200 OK
 
 
 * GET /api/accounts/ {token} 200 \[accounts]

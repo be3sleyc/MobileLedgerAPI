@@ -239,4 +239,23 @@ router.post('/log', auth, (req, res) => {
     }
 });
 
+router.put('/:id/delete', auth, (req, res) => {
+    try {
+        let id = parseInt(req.params.id);
+
+        const { error } = validate.ids({ id: id });
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
+        let result = transactiondb.delete([req.user.id, id]);
+        result.then(row => {
+            let transaction = row[0][0]
+            res.status(200).json({ message: 'Delete successful' })
+        })
+    } catch (e) {
+        res.status(500).json({ route_error: e });
+    }
+});
+
 module.exports = router;
