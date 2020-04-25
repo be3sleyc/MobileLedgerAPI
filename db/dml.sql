@@ -3,7 +3,7 @@ CREATE PROCEDURE sp_addaccount (IN pUid INT UNSIGNED, IN pName VARCHAR(30), IN p
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pid AND isdeleted = 0; END$$
+CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes, isdeleted FROM Accounts WHERE userid = pid; END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -83,7 +83,7 @@ CREATE PROCEDURE sp_getaccounttransactionrange (IN puid INT UNSIGNED, IN paid IN
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pcat VARCHAR(255)) BEGIN INSERT INTO Transactions (accountid, payerid, paiddate, payee, description, amount, category) VALUES (paid, puid, pdate,  ppayee, pdescription, pamount, pcat); END$$
+CREATE PROCEDURE sp_addtransaction (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pamount DECIMAL(13,2), IN pdate DATETIME, IN ppayee VARCHAR(100), IN pdescription VARCHAR(100), IN pcat VARCHAR(255)) BEGIN IF(pcat IS NULL OR pcat = '') THEN INSERT INTO Transactions (accountid, payerid, paiddate, payee, description, amount) VALUES (paid, puid, pdate,  ppayee, pdescription, pamount); ELSE INSERT INTO Transactions (accountid, payerid, paiddate, payee, description, amount, category) VALUES (paid, puid, pdate,  ppayee, pdescription, pamount, pcat); END IF; END$$
 DELIMITER ;
 
 DELIMITER $$
