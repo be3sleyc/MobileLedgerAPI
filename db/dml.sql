@@ -74,7 +74,7 @@ AFTER INSERT
     ON Transactions FOR EACH ROW
     UPDATE Accounts SET balance = balance + New.amount WHERE id = New.accountid;
 
-CREATE DEFINER=`root`@`localhost` TRIGGER tr_incrementaccountbalance
+CREATE DEFINER=`root`@`localhost` TRIGGER tr_cleanblacklist
 AFTER INSERT 
     ON Bokens FOR EACH ROW
     DELETE FROM Bokens WHERE expdate < NOW() - INTERVAL 14 DAY;
