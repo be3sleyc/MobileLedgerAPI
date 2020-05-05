@@ -65,7 +65,7 @@ router.post('/register', (req, res) => {
 });
 
 router.put('/login', (req, res) => {
-    // get email and username form request
+    // get email and username from request
     try {
         // client shouldn't be logged in
         const token = req.header('auth-token');
@@ -91,7 +91,7 @@ router.put('/login', (req, res) => {
                             let result = userdb.login([email, pwd]);
                             result.then(user => {
                                 // should return a JWT
-                                const token = jwt.sign(user[0][0], process.env.JWT_SECRET, { expiresIn: "7d" }, (err, token) => {
+                                const token = jwt.sign(user[0][0], process.env.JWT_SECRET, { expiresIn: "14d" }, (err, token) => {
                                     if (err) {
                                         return res.status(500).json({ token_error: err });
                                     }

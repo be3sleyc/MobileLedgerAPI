@@ -17,24 +17,6 @@ router.get('/', auth, (req, res) => {
     }
 });
 
-router.get('/:id', auth, (req, res) => {
-    try {
-        let id = parseInt(req.params.id);
-
-        const { error } = validate.ids({ id: id });
-        if (error) {
-            return res.status(400).json({ message: error.details[0].message });
-        }
-
-        let result = accountdb.one([req.user.id, id]);
-        result.then(row => {
-            res.status(200).json({ message: "Fetch successful", account: row[0] })
-        })
-    } catch (e) {
-        res.status(500).json({ route_error: e });
-    }
-});
-
 router.put('/:id/edit', auth, (req, res) => {
     try {
         let name = "";

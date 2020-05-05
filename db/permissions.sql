@@ -29,13 +29,9 @@ GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_editaccount` TO 'gary'@'192.168.1.
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getaccounts` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getaccounts` TO 'gary'@'192.168.1.124';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getaccounts` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getaccount` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getaccount` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getaccount` TO 'gary'@'192.168.1.7';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_closeaccount` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_closeaccount` TO 'gary'@'192.168.1.124';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_closeaccount` TO 'gary'@'192.168.1.7';
-
 
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_logout` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_logout` TO 'gary'@'192.168.1.124';
@@ -43,37 +39,10 @@ GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_logout` TO 'gary'@'192.168.1.7';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_lookuptoken` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_lookuptoken` TO 'gary'@'192.168.1.124';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_lookuptoken` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_expiretokens` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_expiretokens` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_expiretokens` TO 'gary'@'192.168.1.7';
 
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getrange` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getrange` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getrange` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_gettransaction` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_gettransaction` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_gettransaction` TO 'gary'@'192.168.1.7';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_gettransactions` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_gettransactions` TO 'gary'@'192.168.1.124';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_gettransactions` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcattransactions` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcattransactions` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcattransactions` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcattransactionrange` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcattransactionrange` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcattransactionrange` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getpaytransactions` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getpaytransactions` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getpaytransactions` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getpaytransactionrange` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getpaytransactionrange` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getpaytransactionrange` TO 'gary'@'192.168.1.7';
-Grant Execute ON PROCEDURE `MobileLedger`.`sp_getaccounttransactions` TO 'gary'@'localhost';
-Grant Execute ON PROCEDURE `MobileLedger`.`sp_getaccounttransactions` TO 'gary'@'192.168.1.124';
-Grant Execute ON PROCEDURE `MobileLedger`.`sp_getaccounttransactions` TO 'gary'@'192.168.1.7';
-Grant Execute ON PROCEDURE `MobileLedger`.`sp_getaccounttransactionrange` TO 'gary'@'localhost';
-Grant Execute ON PROCEDURE `MobileLedger`.`sp_getaccounttransactionrange` TO 'gary'@'192.168.1.124';
-Grant Execute ON PROCEDURE `MobileLedger`.`sp_getaccounttransactionrange` TO 'gary'@'192.168.1.7';
 Grant Execute ON PROCEDURE `MobileLedger`.`sp_addtransaction` TO 'gary'@'localhost';
 Grant Execute ON PROCEDURE `MobileLedger`.`sp_addtransaction` TO 'gary'@'192.168.1.124';
 Grant Execute ON PROCEDURE `MobileLedger`.`sp_addtransaction` TO 'gary'@'192.168.1.7';
@@ -83,6 +52,3 @@ GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_edittransaction` TO 'gary'@'192.16
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_deletetransaction` TO 'gary'@'localhost';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_deletetransaction` TO 'gary'@'192.168.1.124';
 GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_deletetransaction` TO 'gary'@'192.168.1.7';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcategories` TO 'gary'@'localhost';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcategories` TO 'gary'@'192.168.1.124';
-GRANT EXECUTE ON PROCEDURE `MobileLedger`.`sp_getcategories` TO 'gary'@'192.168.1.7';

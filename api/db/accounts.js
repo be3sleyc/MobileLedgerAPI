@@ -13,18 +13,6 @@ accountdb.all = (uid) => {
         });
 };
 
-// let ids = [uid, id];
-accountdb.one = (ids) => {
-    return pool
-        .query("CALL sp_getAccount (?, ?)", ids)
-        .then(row => {
-            return row[0];
-        })
-        .catch(err => {
-            return { db_error: err };
-        });
-};
-
 // let attr = [uid, name, type, balance, note];
 accountdb.add = (attr) => {
     return pool

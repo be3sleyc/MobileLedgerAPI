@@ -18,7 +18,6 @@ module.exports = (req, res, next) => {
             } else {
                 jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
                     if (err) {
-
                         return res.status(401).json({ message: 'Invalid Token' });
                     } else {
                         req.user = payload;

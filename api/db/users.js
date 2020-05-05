@@ -2,17 +2,6 @@ const pool = require('./');
 
 let userdb = {};
 
-userdb.all = () => {
-    return pool
-        .query("SELECT * FROM `Users`")
-        .then(rows => {
-            return rows;
-        })
-        .catch(err => {
-            return { db_error: err };
-        });
-};
-
 userdb.one_e = (email) => {
     return pool
         .query("CALL sp_getuseremail (?)", [email])

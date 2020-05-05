@@ -7,10 +7,6 @@ CREATE PROCEDURE sp_getaccounts (IN pid INT UNSIGNED) BEGIN SELECT id, name, typ
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_getaccount (IN pUid INT UNSIGNED,  IN pId INT UNSIGNED) BEGIN SELECT id, name, type, balance, notes FROM Accounts WHERE userid = pUid AND id = pId; END$$
-DELIMITER ;
-
-DELIMITER $$
 CREATE PROCEDURE sp_editaccount (IN pid INT UNSIGNED, IN puid INT UNSIGNED, IN pname VARCHAR(30), IN ptype VARCHAR(20), IN pnotes VARCHAR(512)) BEGIN IF(pname = '' OR pname IS NULL) THEN SELECT name INTO pname FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(ptype = '' OR ptype IS NULL) THEN SELECT type INTO ptype FROM Accounts WHERE id = pid AND userid = puid; END IF; IF(pnotes = '' OR pnotes IS NULL) THEN SELECT notes INTO pnotes FROM Accounts WHERE id = pid AND userid = puid; END IF; UPDATE Accounts SET name = pname, type = ptype, notes = pnotes WHERE id = pid AND userid = puid; END$$
 DELIMITER ;
 
@@ -43,43 +39,7 @@ CREATE PROCEDURE sp_lookuptoken (IN ptoken VARBINARY(300) ) BEGIN SELECT * FROM 
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE sp_expiretokens () BEGIN DELETE FROM Bokens WHERE expdate < NOW(); END$$ 
-DELIMITER ;
-
-DELIMITER $$
 CREATE PROCEDURE sp_gettransactions ( IN puid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getrange (IN puid INT UNSIGNED, IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND paiddate BETWEEN pstart AND pstop; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_gettransaction (IN puid INT UNSIGNED, IN pid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND T.id = pid; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getcattransactions (IN puid INT UNSIGNED, IN pcat VARCHAR(255)) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND category = pcat; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getcattransactionrange (IN puid INT UNSIGNED, IN pcat VARCHAR(255), IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND category = pcat AND paiddate BETWEEN pstart AND pstop; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getpaytransactions (IN puid INT UNSIGNED, IN ppayee VARCHAR(100)) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND payee = ppayee; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getpaytransactionrange (IN puid INT UNSIGNED, IN ppayee VARCHAR(100), IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND payee = ppayee AND paiddate BETWEEN pstart AND pstop; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getaccounttransactions (IN puid INT UNSIGNED, IN paid INT UNSIGNED) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND accountid = paid; END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getaccounttransactionrange (IN puid INT UNSIGNED, IN paid INT UNSIGNED, IN pstart DATETIME, IN pstop DATETIME) BEGIN SELECT T.id, A.name AS "accountname", paiddate, payee, description, amount, category FROM Transactions AS T JOIN Accounts AS A ON T.accountid = A.id WHERE userid = puid AND accountid = paid AND paiddate BETWEEN pstart AND pstop; END$$
 DELIMITER ;
 
 DELIMITER $$
@@ -92,10 +52,6 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE sp_deletetransaction (puid INT UNSIGNED, IN pid INT UNSIGNED) BEGIN DELETE FROM Transactions WHERE id = pid AND payerid = puid; END $$
-DELIMITER ;
-
-DELIMITER $$
-CREATE PROCEDURE sp_getcategories (IN puid INT UNSIGNED) BEGIN SELECT DISTINCT category FROM Transactions WHERE payerid = puid ORDER BY category DESC; END $$
 DELIMITER ;
 
 CREATE DEFINER=`root`@`localhost` TRIGGER tr_resetaccountbalance
@@ -117,3 +73,8 @@ CREATE DEFINER=`root`@`localhost` TRIGGER tr_incrementaccountbalance
 AFTER INSERT 
     ON Transactions FOR EACH ROW
     UPDATE Accounts SET balance = balance + New.amount WHERE id = New.accountid;
+
+CREATE DEFINER=`root`@`localhost` TRIGGER tr_incrementaccountbalance
+AFTER INSERT 
+    ON Bokens FOR EACH ROW
+    DELETE FROM Bokens WHERE expdate < NOW() - INTERVAL 14 DAY;
