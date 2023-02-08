@@ -25,7 +25,7 @@
   "homepage": "https://github.com/be3sleyc/Capstone#readme",
   "dependencies": {
     "@sideway/address": "^4.1.2",
-    "@sideway/formula": "^3.0.0",
+    "@sideway/formula": "^3.0.1",
     "@sideway/pinpoint": "^2.0.0",
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
